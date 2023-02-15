@@ -1,7 +1,13 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from django.views.decorators.csrf import csrf_exempt # Sirve 
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
 from django.core import serializers
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
+import json
+from django.http import JsonResponse
 import json 
 
 
@@ -70,6 +76,7 @@ def obtenerRestaurantes(request):
         strError = json.dumps(dictError)
         return HttpResponse(strError)
 
+@csrf_exempt
 def ObtenerRecomendaciones(request):
     recomendaciones = [
         {"id" : 1, "imagen" : "https://supervalu.ie/thumbnail/1440x480/var/files/real-food/recipes/Uploaded-2020/spaghetti-bolognese-recipe.jpg", "texto" : "Ricos fideos a la italiana"},
@@ -83,3 +90,20 @@ def ObtenerRecomendaciones(request):
     }
     strResponse = json.dumps(dictResponse)
     return HttpResponse(strResponse)
+
+@csrf_exempt
+def verEstado(request):
+    pedidos = [
+        { "id": 1, "nombre": "Renzo", "plato": "fideos", "direccion": "Pueblo Libre", "estado": "en preparación", "codigo": "ABC123" },
+        { "id": 2, "nombre": "Juan", "plato": "pizza", "direccion": "Jesus Maria", "estado": "en preparación", "codigo": "DEF456" },
+        { "id": 3, "nombre": "Roberto", "plato": "ensalada", "direccion": "Los Olivos", "estado": "en preparación", "codigo": "GHI789" }
+    ]
+
+    if request.method == "GET":
+        dictResponse = {
+            "error" : "",
+            "arreglo" : pedidos
+        }
+        return HttpResponse(json.dumps(dictResponse))
+    else:
+        return HttpResponse("Tipo de petición incorrecto, por favor usar GET")

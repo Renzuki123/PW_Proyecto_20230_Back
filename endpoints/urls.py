@@ -7,4 +7,5 @@ urlpatterns = [
     path("adios", views.endpoint2),
     path("html", views.htmlEndpoint),
     path("recomendaciones", views.ObtenerRecomendaciones),
+    path("verestado", views.verEstado)
 ]
