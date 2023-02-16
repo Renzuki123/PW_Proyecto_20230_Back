@@ -5,8 +5,17 @@ from django.db import models
 class User(models.Model):
     usuario = models.CharField(max_length=50)
     password = models.CharField(max_length=50)
+
     def __str__(self):
         return self.usuario + " " + self.password
+
+    @staticmethod
+    def authenticate(usuario, password):
+        try:
+            user = User.objects.get(usuario=usuario, password=password)
+            return user
+        except User.DoesNotExist:
+            return None
 
 class Categoria(models.Model):
     nombre = models.CharField(max_length=50)

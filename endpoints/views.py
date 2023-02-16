@@ -25,15 +25,15 @@ def obtenerRestaurantes(request):
             strError = json.dumps(dictError)
             return HttpResponse(strError)
 
-        peliculasFiltradas = []
+        restaurantesFiltrados = []
 
         if idCategoria == "-1" :
-            peliculasQS = Pelicula.objects.all()
+            restauranteQS = Restaurante.objects.all()
         else:
-            peliculasQS = Pelicula.objects.filter(categoria__pk=idCategoria)
+            restauranteQS = Restaurante.objects.filter(categoria__pk=idCategoria)
         
-        for p in peliculasQS:
-            peliculasFiltradas.append({
+        for p in restauranteQS:
+            restauranteQS = restaurantesFiltrados.append({
                 "id" : p.pk,
                 "nombre" : p.nombre,
                 "url" : p.url,
@@ -45,7 +45,7 @@ def obtenerRestaurantes(request):
 
         dictResponse = {
             "error": "",
-            "peliculas": peliculasFiltradas
+            "restaurante": restaurantesFiltrados
         }
         strResponse = json.dumps(dictResponse)
         return HttpResponse(strResponse)
