@@ -387,7 +387,7 @@ def ObtenerRestaurantesRC(request):
 ]
     dictResponse = {
         "error": "",
-        "resatuarntes": Restaurantes
+        "restaurantes": Restaurantes
     }
     strResponse = json.dumps(dictResponse)
     return HttpResponse(strResponse)
