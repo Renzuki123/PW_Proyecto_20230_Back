@@ -74,9 +74,9 @@ def ObtenerRecomendaciones(request):
 @csrf_exempt
 def verEstado(request):
     pedidos = [
-        { "id": 1, "nombre": "Renzo", "plato": "fideos", "direccion": "Pueblo Libre", "estado": "en preparación", "codigo": "ABC123" },
-        { "id": 2, "nombre": "Juan", "plato": "pizza", "direccion": "Jesus Maria", "estado": "en preparación", "codigo": "DEF456" },
-        { "id": 3, "nombre": "Roberto", "plato": "ensalada", "direccion": "Los Olivos", "estado": "en preparación", "codigo": "GHI789" }
+        { "id": 1, "nombre": "Renzo", "restaurante": "Pizzeria Artesanal","plato": "fideos", "direccion": "Pueblo Libre", "estado": "en preparación", "codigo": "ABC123" },
+        { "id": 2, "nombre": "Renzo", "restaurante": "Pizzeria Artesanal","plato": "pizza", "direccion": "Pueblo Libre", "estado": "en preparación", "codigo": "DEF456" },
+        { "id": 3, "nombre": "Renzo", "restaurante": "Bembos","plato": "ensalada", "direccion": "Pueblo Libre", "estado": "en preparación", "codigo": "GHI789" }
     ]
 
     if request.method == "GET":
