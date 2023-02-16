@@ -60,9 +60,9 @@ def obtenerRestaurantes(request):
 def ObtenerRecomendaciones(request):
     recomendaciones = [
         {"id" : 1, "imagen" : "https://supervalu.ie/thumbnail/1440x480/var/files/real-food/recipes/Uploaded-2020/spaghetti-bolognese-recipe.jpg", "texto" : "Ricos fideos a la italiana"},
-        {"id" : 2, "imagen" : "https://placeralplato.com/files/2015/06/pizza-Margarita.jpg", "texto" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."},
-        {"id" : 3, "imagen" : "https://i.imgur.com/xYQlyoY.png", "texto" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."},
-        {"id" : 4, "imagen" : "https://i.imgur.com/jxtsRAc.png", "texto" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."},
+        {"id" : 2, "imagen" : "https://placeralplato.com/files/2015/06/pizza-Margarita.jpg", "texto" : "Pizza italiana 10/10, no te la puedes perder"},
+        {"id" : 3, "imagen" : "https://www.diariamenteali.com/medias/receta-lasgnable-lasagna-de-carne-1900Wx500H?context=bWFzdGVyfGltYWdlc3w0NDg2NzY2fGltYWdlL3BuZ3xoMTgvaGVkLzkyNjA1NzI2MzkyNjIvcmVjZXRhLWxhc2duYWJsZS1sYXNhZ25hLWRlLWNhcm5lXzE5MDBXeDUwMEh8YzQyNDA3YWE1Nzc4YWZlY2YwYTBhZjkwOGFhMzhmYmMxMzQ3NTY2NDlkMmYxZDQ4NWMzNGY4Njk5YzY2OGFkMQ", "texto" : "Lasagna italiana, tu vida no será la misma luego de probarla"},
+        {"id" : 4, "imagen" : "https://assets.tmecosys.com/image/upload/t_web600x528/img/recipe/ras/Assets/b89f8de9-0f93-4976-b318-9ab04db353bc/Derivates/d3a08a3c-abb2-452e-9121-168f67c992c8.jpg", "texto" : "Cesar salad, luego de probarla tu mente quedará volando"},
     ]
     dictResponse = {
         "error" : "",
@@ -70,6 +70,53 @@ def ObtenerRecomendaciones(request):
     }
     strResponse = json.dumps(dictResponse)
     return HttpResponse(strResponse)
+
+@csrf_exempt
+def verEstado(request):
+    pedidos = [
+        { "id": 1, "nombre": "Renzo", "plato": "fideos", "direccion": "Pueblo Libre", "estado": "en preparación", "codigo": "ABC123" },
+        { "id": 2, "nombre": "Juan", "plato": "pizza", "direccion": "Jesus Maria", "estado": "en preparación", "codigo": "DEF456" },
+        { "id": 3, "nombre": "Roberto", "plato": "ensalada", "direccion": "Los Olivos", "estado": "en preparación", "codigo": "GHI789" }
+    ]
+
+    if request.method == "GET":
+        dictResponse = {
+            "error" : "",
+            "arreglo" : pedidos
+        }
+        return HttpResponse(json.dumps(dictResponse))
+    else:
+        return HttpResponse("Tipo de petición incorrecto, por favor usar GET")
+
+@csrf_exempt
+def registrarentrega(request):
+    pedidos = [
+        {"code" : 123, "desc" : "Lomito saltado", "code_v" : 123},
+        {"code" : 777, "desc" : "Chilcanito doble", "code_v" : 444},
+        {"code" : 789, "desc" : "Tallarines rojos", "code_v" : 333},
+    ]
+
+    if request.method == "POST":
+        dictCode = json.loads(request.body)
+        code = dictCode["code"]
+        error = "No se encontró ese pedido"
+        if code != None:
+            for pedido in pedidos:
+                if int(code) == pedido["code"]:
+                    dictOK = {
+                        "error": "",
+                        "producto" : pedido
+                    }
+                    strOK = json.dumps(dictOK)
+                    return HttpResponse(strOK)
+        else:
+            error = "Por favor envíe un código de pedido"
+        dictError = {
+            "error" : error
+        }
+        return HttpResponse(json.dumps(dictError))
+    else:
+        return HttpResponse("Tipo de petición incorrecto, por favor usar POST") 
 
 #Endpoints Renzo Cavero:
 #/endpoints/login
@@ -191,20 +238,3 @@ def obtenerRestaurantes(request):
         }
         strError = json.dumps(dictError)
         return HttpResponse(strError)
-
-@csrf_exempt
-def verEstado(request):
-    pedidos = [
-        { "id": 1, "nombre": "Renzo", "plato": "fideos", "direccion": "Pueblo Libre", "estado": "en preparación", "codigo": "ABC123" },
-        { "id": 2, "nombre": "Juan", "plato": "pizza", "direccion": "Jesus Maria", "estado": "en preparación", "codigo": "DEF456" },
-        { "id": 3, "nombre": "Roberto", "plato": "ensalada", "direccion": "Los Olivos", "estado": "en preparación", "codigo": "GHI789" }
-    ]
-
-    if request.method == "GET":
-        dictResponse = {
-            "error" : "",
-            "arreglo" : pedidos
-        }
-        return HttpResponse(json.dumps(dictResponse))
-    else:
-        return HttpResponse("Tipo de petición incorrecto, por favor usar GET")
