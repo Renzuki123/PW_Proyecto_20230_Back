@@ -25,15 +25,15 @@ def obtenerRestaurantes(request):
             strError = json.dumps(dictError)
             return HttpResponse(strError)
 
-        restaurantesFiltrados = []
+        peliculasFiltradas = []
 
         if idCategoria == "-1" :
-            restauranteQS = Restaurante.objects.all()
+            peliculasQS = Pelicula.objects.all()
         else:
-            restauranteQS = Restaurante.objects.filter(categoria__pk=idCategoria)
+            peliculasQS = Pelicula.objects.filter(categoria__pk=idCategoria)
         
-        for p in restauranteQS:
-            restauranteQS = restaurantesFiltrados.append({
+        for p in peliculasQS:
+            peliculasFiltradas.append({
                 "id" : p.pk,
                 "nombre" : p.nombre,
                 "url" : p.url,
@@ -45,7 +45,7 @@ def obtenerRestaurantes(request):
 
         dictResponse = {
             "error": "",
-            "restaurante": restaurantesFiltrados
+            "peliculas": peliculasFiltradas
         }
         strResponse = json.dumps(dictResponse)
         return HttpResponse(strResponse)
@@ -122,30 +122,27 @@ def registrarentrega(request):
 #/endpoints/login
 def login(request):
     if request.method == "POST":
-        dictDataRequest = json.loads(request.body)
-        usuario = dictDataRequest["usuario"]
-        password = dictDataRequest["password"]
-
-        try:
-            user = User.objects.get(usuario=usuario, password=password)
-        except User.DoesNotExist:
+        usuario = request.POST.get("usuario")
+        password = request.POST.get("password")
+        
+        # Authenticate user
+        user = authenticate(request, username=usuario, password=password)
+        
+        if user is not None:
+            # Log user in
+            login(request, user)
+            # Redirect to /req2
+            return redirect('/req2')
+        else:
             dictError = {
-                "error": "Error en login"
+                "error": "INICIO DE SESIÓN FALLIDO"
             }
-            strError = json.dumps(dictError)
-            return HttpResponse(strError)
-
-        dictOk = {
-            "error": ""
-        }
-        return HttpResponse(json.dumps(dictOk))
-
+            return JsonResponse(dictError)
     else:
         dictError = {
-            "error": "Tipo de peticion no existe"
+            "error": "SOLICITUD NO ES DE TIPO POST"
         }
-        strError = json.dumps(dictError)
-        return HttpResponse(strError)
+        return JsonResponse(dictError)
 
 #Req4: /endpoints/listarPlatos
 def obtenerPlatos(request):
