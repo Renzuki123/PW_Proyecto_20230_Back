@@ -9,8 +9,9 @@ urlpatterns = [
     path("platos/listar", views.obtenerPlatos), #Req4: Platos Por Categoría
     path("categorias/listar", views.obtenerCategorias),
 
-    
+    # Paths de Renzo Saucedo
     path("recomendaciones", views.ObtenerRecomendaciones),
     path("verestado", views.verEstado),
-    path("registrarentrega", views.registrarentrega)
+    path("registrarentrega", views.registrarentrega),
+    path("platosgenericos", views.ObtenerPlatosGenericos)
 ]
