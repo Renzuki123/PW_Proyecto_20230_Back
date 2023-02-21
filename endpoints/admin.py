@@ -2,7 +2,6 @@ from django.contrib import admin
 from . import models
 
 # Register your models here.
-admin.site.register(models.User)
-admin.site.register(models.Categoria)
-admin.site.register(models.Platos)
-admin.site.register(models.Restaurantes)
+admin.site.register(models.User) #Renzo Cavero
+admin.site.register(models.Plato) #Renzo Cavero
+admin.site.register(models.Restaurante) #Renzo Cavero
