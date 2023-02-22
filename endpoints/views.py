@@ -32,6 +32,108 @@ def ObtenerRecomendaciones(request):
     strResponse = json.dumps(dictResponse)
     return HttpResponse(strResponse)
 
+"""
+@csrf_exempt
+def ObtenerPlatosGenericos(request):
+    if request.method == 'GET':
+        Platos = [
+            {
+                'id': 1,
+                'image':
+                'https://supervalu.ie/thumbnail/1440x480/var/files/real-food/recipes/Uploaded-2020/spaghetti-bolognese-recipe.jpg',
+                'name': 'Spaghetti Bolognese',
+                'price': 10,
+            },
+
+            {
+                'id': 2,
+                'image':
+                'https://placeralplato.com/files/2015/06/pizza-Margarita.jpg',
+                'name': 'Pizza Margherita',
+                'price': 12,
+            },
+
+            {
+                'id': 3,
+                'image':
+                'https://www.diariamenteali.com/medias/receta-lasgnable-lasagna-de-carne-1900Wx500H?context=bWFzdGVyfGltYWdlc3w0NDg2NzY2fGltYWdlL3BuZ3xoMTgvaGVkLzkyNjA1NzI2MzkyNjIvcmVjZXRhLWxhc2duYWJsZS1sYXNhZ25hLWRlLWNhcm5lXzE5MDBXeDUwMEh8YzQyNDA3YWE1Nzc4YWZlY2YwYTBhZjkwOGFhMzhmYmMxMzQ3NTY2NDlkMmYxZDQ4NWMzNGY4Njk5YzY2OGFkMQ',
+                'name': 'Lasagna',
+                'price': 15,
+            },
+
+            {
+                'id': 4,
+                'image':
+                'https://assets.tmecosys.com/image/upload/t_web600x528/img/recipe/ras/Assets/b89f8de9-0f93-4976-b318-9ab04db353bc/Derivates/d3a08a3c-abb2-452e-9121-168f67c992c8.jpg',
+                'name': 'Cesar salad',
+                'price': 10,
+            },
+        ]
+        data = {'platos_genericos': Platos}
+        return JsonResponse(data, safe=False)
+
+    elif request.method == 'POST':
+        carrito = json.loads(request.body)
+        total = obtener_total(carrito)
+        return JsonResponse({'total': total})
+    
+    dictResponse = {
+            "error": "",
+            "platos_genericos": Platos
+        }
+    strResponse = json.dumps(dictResponse)
+    return HttpResponse(strResponse)
+"""
+
+@csrf_exempt
+def ObtenerPlatosGenericos(request):
+    if request.method == 'GET':
+        platos = Plato.objects.all()
+        platos_list = [{'id': plato.id, 'imagen': plato.img, 'name': plato.nombre, 'precio': plato.precio} for plato in platos]
+        data = {'platos_genericos': platos_list}
+        return JsonResponse(data, safe=False)
+
+    elif request.method == 'POST':
+        carrito = json.loads(request.body)
+        total = obtener_total(carrito)
+        return JsonResponse({'total': total})
+    
+    dictResponse = {
+            "error": "",
+            "platos_genericos": platos_list
+        }
+    strResponse = json.dumps(dictResponse)
+    return HttpResponse(strResponse)
+    
+
+
+@csrf_exempt
+def procesar_pedido(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        items = data['items']
+        total = sum(float(item['precio'])*float(item['quantity']) for item in items)
+        return JsonResponse({'total': total})
+
+
+def obtener_total(carrito):
+    total = sum(float(item['precio']) * float(item['quantity']) for item in carrito)
+    return total
+
+
+@csrf_exempt
+def registrarPedido(request):
+    if request.method == "POST":
+        # obtener los datos enviados en el cuerpo de la solicitud
+        data = request.POST
+        # hacer algo con los datos, por ejemplo, guardarlos en la base de datos
+        # ...
+
+        # responder con un mensaje de éxito
+        return JsonResponse({"message": "Pedido registrado correctamente."})
+
+    # si no se hace una solicitud POST, responder con un error
+    return JsonResponse({"error": "Debe hacer una solicitud POST."}, status=400)
 
 """
 @csrf_exempt
@@ -225,84 +327,3 @@ def obtenerRestaurante(request):
         strError = json.dumps(dictError)
         return HttpResponse(strError)
         
-
-@csrf_exempt
-def ObtenerPlatosGenericos(request):
-    if request.method == 'GET':
-        Platos = [
-            {
-                'id': 1,
-                'image':
-                'https://supervalu.ie/thumbnail/1440x480/var/files/real-food/recipes/Uploaded-2020/spaghetti-bolognese-recipe.jpg',
-                'name': 'Spaghetti Bolognese',
-                'price': 10,
-            },
-
-            {
-                'id': 2,
-                'image':
-                'https://placeralplato.com/files/2015/06/pizza-Margarita.jpg',
-                'name': 'Pizza Margherita',
-                'price': 12,
-            },
-
-            {
-                'id': 3,
-                'image':
-                'https://www.diariamenteali.com/medias/receta-lasgnable-lasagna-de-carne-1900Wx500H?context=bWFzdGVyfGltYWdlc3w0NDg2NzY2fGltYWdlL3BuZ3xoMTgvaGVkLzkyNjA1NzI2MzkyNjIvcmVjZXRhLWxhc2duYWJsZS1sYXNhZ25hLWRlLWNhcm5lXzE5MDBXeDUwMEh8YzQyNDA3YWE1Nzc4YWZlY2YwYTBhZjkwOGFhMzhmYmMxMzQ3NTY2NDlkMmYxZDQ4NWMzNGY4Njk5YzY2OGFkMQ',
-                'name': 'Lasagna',
-                'price': 15,
-            },
-
-            {
-                'id': 4,
-                'image':
-                'https://assets.tmecosys.com/image/upload/t_web600x528/img/recipe/ras/Assets/b89f8de9-0f93-4976-b318-9ab04db353bc/Derivates/d3a08a3c-abb2-452e-9121-168f67c992c8.jpg',
-                'name': 'Cesar salad',
-                'price': 10,
-            },
-        ]
-        data = {'platos_genericos': Platos}
-        return JsonResponse(data, safe=False)
-
-    elif request.method == 'POST':
-        carrito = json.loads(request.body)
-        total = obtener_total(carrito)
-        return JsonResponse({'total': total})
-    """
-    dictResponse = {
-            "error": "",
-            "platos_genericos": Platos
-        }
-    strResponse = json.dumps(dictResponse)
-    return HttpResponse(strResponse)
-    """
-
-
-@csrf_exempt
-def procesar_pedido(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        items = data['items']
-        total = sum(item['price']*item['quantity'] for item in items)
-        return JsonResponse({'total': total})
-
-
-def obtener_total(carrito):
-    total = sum(item['price'] * item['quantity'] for item in carrito)
-    return total
-
-
-@csrf_exempt
-def registrarPedido(request):
-    if request.method == "POST":
-        # obtener los datos enviados en el cuerpo de la solicitud
-        data = request.POST
-        # hacer algo con los datos, por ejemplo, guardarlos en la base de datos
-        # ...
-
-        # responder con un mensaje de éxito
-        return JsonResponse({"message": "Pedido registrado correctamente."})
-
-    # si no se hace una solicitud POST, responder con un error
-    return JsonResponse({"error": "Debe hacer una solicitud POST."}, status=400)

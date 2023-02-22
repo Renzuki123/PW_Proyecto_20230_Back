@@ -12,5 +12,5 @@ urlpatterns = [
     path("recomendaciones", views.ObtenerRecomendaciones),
     path("verestado", views.verEstado),
     path("registrarentrega", views.registrarentrega),
-    path("platosgenericos", views.ObtenerPlatosGenericos)
+    path("platosgenericos", views.ObtenerPlatosGenericos),
 ]
