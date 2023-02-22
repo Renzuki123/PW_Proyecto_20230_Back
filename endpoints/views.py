@@ -9,20 +9,40 @@ from django.views.decorators.http import require_POST
 import json
 from django.http import JsonResponse
 import json
-from endpoints.models import User, Plato, Restaurante
+from endpoints.models import User, Plato, Restaurante, Pedido
 
 # Create your views here.
 # Si la peticion es GET: se puede enviar por: 1) Path parameter 2) Query Parameter. La desventaja está en que la data se envía mediante el url (inseguro)
 
-
 @csrf_exempt
 def ObtenerRecomendaciones(request):
+    recomendaciones = []
+    for plato in Plato.objects.all():
+        recomendacion = {
+            "id": plato.id,
+            "imagen": plato.img,
+            "descripcion": plato.descripcion,
+        }
+        recomendaciones.append(recomendacion)
+
+    dictResponse = {
+        "error": "",
+        "recomendaciones": recomendaciones
+    }
+    strResponse = json.dumps(dictResponse)
+    return HttpResponse(strResponse)
+
+
+"""
+@csrf_exempt
+def ObtenerRecomendaciones(request):
+
     recomendaciones = [
         {"id": 1, "imagen": "https://supervalu.ie/thumbnail/1440x480/var/files/real-food/recipes/Uploaded-2020/spaghetti-bolognese-recipe.jpg",
             "texto": "Ricos fideos a la italiana"},
         {"id": 2, "imagen": "https://placeralplato.com/files/2015/06/pizza-Margarita.jpg",
             "texto": "Pizza italiana 10/10, no te la puedes perder"},
-        {"id": 3, "imagen": "https://www.diariamenteali.com/medias/receta-lasgnable-lasagna-de-carne-1900Wx500H?context=bWFzdGVyfGltYWdlc3w0NDg2NzY2fGltYWdlL3BuZ3xoMTgvaGVkLzkyNjA1NzI2MzkyNjIvcmVjZXRhLWxhc2duYWJsZS1sYXNhZ25hLWRlLWNhcm5lXzE5MDBXeDUwMEh8YzQyNDA3YWE1Nzc4YWZlY2YwYTBhZjkwOGFhMzhmYmMxMzQ3NTY2NDlkMmYxZDQ4NWMzNGY4Njk5YzY2OGFkMQ",
+        {"id": 3, "imagen": "https://www.recetasdesbieta.com/wp-content/uploads/2018/10/lasagna-original..jpg",
             "texto": "Lasagna italiana, tu vida no será la misma luego de probarla"},
         {"id": 4, "imagen": "https://assets.tmecosys.com/'image'/upload/t_web600x528/img/recipe/ras/Assets/b89f8de9-0f93-4976-b318-9ab04db353bc/Derivates/d3a08a3c-abb2-452e-9121-168f67c992c8.jpg",
             "texto": "Cesar salad, luego de probarla tu mente quedará volando"},
@@ -33,7 +53,25 @@ def ObtenerRecomendaciones(request):
     }
     strResponse = json.dumps(dictResponse)
     return HttpResponse(strResponse)
+"""
+    
+    # platosFiltrados = []
+    # platosQS = Plato.objects.all()
 
+    # for p in platosQS:
+    #     platosFiltrados.append({
+    #         "id" : p.pk,
+    #         "img" : p.img,
+    #         "descripcion" : p.descripcion
+    #     })
+
+    # dictResponse = {
+    #     "error": "",
+    #     "platos": platosFiltrados
+    # }
+    # strResponse = json.dumps(dictResponse)
+    # return HttpResponse(strResponse)
+    
 
 @csrf_exempt
 def verEstado(request):
