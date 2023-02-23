@@ -155,25 +155,7 @@ def ObtenerRecomendaciones(request):
     }
     strResponse = json.dumps(dictResponse)
     return HttpResponse(strResponse)
-"""
-    
-    # platosFiltrados = []
-    # platosQS = Plato.objects.all()
-
-    # for p in platosQS:
-    #     platosFiltrados.append({
-    #         "id" : p.pk,
-    #         "img" : p.img,
-    #         "descripcion" : p.descripcion
-    #     })
-
-    # dictResponse = {
-    #     "error": "",
-    #     "platos": platosFiltrados
-    # }
-    # strResponse = json.dumps(dictResponse)
-    # return HttpResponse(strResponse)
-    
+""" 
 
 @csrf_exempt
 def verEstado(request):

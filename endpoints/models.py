@@ -42,8 +42,17 @@ class Pedido(models.Model):
         ("EC", "EN CAMINO"),
         ("E", "ENTREGADO")
     )
+    nombre = models.CharField(max_length=50)
+    direccion = models.CharField(max_length=100)
+    detalles = models.CharField(max_length=100)
+    codigo = models.CharField(max_length=6)
+    metodo = models.CharField(max_length=15)
+    precio = models.DecimalField(default=0.0, decimal_places=2, max_digits=7) 
+    
+    #def __str__(self):
+    #    return f"{self.nombre} - {self.direccion} - {self.codigo}"
 
 class PedidoXPlato(models.Model):
     pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE)
     plato = models.ForeignKey(Plato, on_delete=models.CASCADE)
-    precio = models.DecimalField(default=0.0, decimal_places=2, max_digits=7)
+    
