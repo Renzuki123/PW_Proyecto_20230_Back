@@ -6,6 +6,13 @@ import json
 from .models import Categoria, Platos
 from django.http import JsonResponse
 
+@csrf_exempt
+def ObtenerCategoria(request):
+    if request.method == 'GET':
+        categorias = Categoria.objects.raw(raw_query='SELECT "id"AS ID, category, dish FROM public."Categoria" order by id;')
+        categoria_list = [{'id': categoria.id, 'category': categoria.category, 'dish': categoria.dish} for categoria in categorias]
+        data = {'categorias' : categoria_list}
+        return JsonResponse(data, safe = False)
 
 @csrf_exempt        
 def LoginRest(request):

@@ -3,10 +3,12 @@ from django.db import models
 
 class Categoria(models.Model):
     
-    nombre = models.CharField(max_length=50)
+    id = models.UUIDField(primary_key= True, default = True)
+    category = models.CharField(max_length=255 , default='')
+    dish = models.CharField(max_length=255 , default='')
 
     def __str__(self):
-        return self.nombre
+        return self.uuid
 
 class Platos(models.Model):
     nombre = models.CharField(max_length=50)
