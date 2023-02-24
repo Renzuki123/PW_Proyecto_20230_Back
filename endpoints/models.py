@@ -46,6 +46,7 @@ class Pedido(models.Model):
     )
     nombre = models.CharField(max_length=50, default="")
     direccion = models.CharField(max_length=100, default="")
+    referencias = models.CharField(max_length=100, default="")
     detalles = models.CharField(max_length=100, default="")
     #codigo = models.CharField(max_length=6)
     codigo = models.CharField(max_length=6, default ="ABC123")
@@ -56,6 +57,8 @@ class Pedido(models.Model):
     #    return f"{self.nombre} - {self.direccion} - {self.codigo}"
 
 class PedidoXPlato(models.Model):
+    id = models.AutoField(primary_key=True)
     pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE)
     plato = models.ForeignKey(Plato, on_delete=models.CASCADE)
+    cantidad = models.DecimalField(max_digits=6, decimal_places=2, default= 0)
     

@@ -104,19 +104,29 @@ def ObtenerPlatosGenericos(request):
 @csrf_exempt
 def registrar_pedido(request):
     if request.method == 'POST':
-        print(request.body)
         data = json.loads(request.body)
+        print(request.body)
         nombre = data['nombre']
-        total = data['total'] 
+        total = data['total']
         direccion = data['direccion']
+        referencias = data['referencias']
         detalles = data['detalles']
         metodo = data['metodo']
-        pedido = Pedido(nombre=nombre, total=total, direccion=direccion, detalles=detalles, metodo=metodo)
+        pedido = Pedido(nombre=nombre, total=total, direccion=direccion, referencias = referencias, detalles=detalles, metodo=metodo)
         pedido.save()
+
+        detalles = json.loads(detalles)
+        
+        for item in detalles:
+            plato = Plato.objects.get(id=item['id']) # Necesito ayuda para obtener el id del plato sabiendo su nombre
+            cantidad = int(item['cantidad'])
+            pedido_x_plato = PedidoXPlato(pedido=pedido, plato=plato, cantidad=cantidad)
+            pedido_x_plato.save()
+        
         return JsonResponse({'success': True})
-
+        
     return JsonResponse({'error': 'Método no permitido'}, status=405)
-
+    
 """
 @csrf_exempt
 def ObtenerRecomendaciones(request):
