@@ -35,6 +35,7 @@ class Restaurante(models.Model):
     def __str__(self):
         return self.title
 
+# Modelos creados por Renzo Saucedo
 class Pedido(models.Model):
     id = models.AutoField(primary_key=True)
     PEDIDO_ESTADOS = (

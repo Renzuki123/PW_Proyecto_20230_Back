@@ -92,11 +92,6 @@ def ObtenerPlatosGenericos(request):
         platos_list = [{'id': plato.id, 'imagen': plato.img, 'name': plato.nombre, 'precio': plato.precio} for plato in platos]
         data = {'platos_genericos': platos_list}
         return JsonResponse(data, safe=False)
-
-    elif request.method == 'POST':
-        carrito = json.loads(request.body)
-        total = obtener_total(carrito)
-        return JsonResponse({'total': total})
     
     dictResponse = {
             "error": "",
@@ -104,33 +99,6 @@ def ObtenerPlatosGenericos(request):
         }
     strResponse = json.dumps(dictResponse)
     return HttpResponse(strResponse)
-
-@require_POST
-@csrf_exempt
-def procesar_pedido(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        items = data['items']
-        nombre = data['nombre']
-        direccion = data['direccion']
-        detalles = data['detalles']
-        metodo = data['metodo']
-        total = sum(float(item['precio'])*float(item['quantity']) for item in items)
-        # Creamos un objeto Pedido con los datos recibidos
-        pedido = Pedido(precio=total, nombre=nombre, direccion=direccion, detalles=detalles, metodo=metodo)
-        pedido.save()
-        for item in items:
-            plato = Plato.objects.get(nombre=item['name'])
-            pedido_x_plato = PedidoXPlato(pedido=pedido, plato=plato, cantidad=item['quantity'])
-            pedido_x_plato.save()
-        return JsonResponse({'success': True})
-
-    return JsonResponse({'error': 'Método no permitido'}, status=405)
-
-
-def obtener_total(carrito):
-    total = sum(float(item['precio']) * float(item['quantity']) for item in carrito)
-    return total
 
 @require_POST
 @csrf_exempt
