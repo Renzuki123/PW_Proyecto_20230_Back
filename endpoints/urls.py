@@ -13,4 +13,6 @@ urlpatterns = [
     path("verestado", views.verEstado),
     path("registrarentrega", views.registrarentrega),
     path("platosgenericos", views.ObtenerPlatosGenericos),
+    #path("procesar_pedido", views.procesar_pedido),
+    path("registrar_pedido", views.registrar_pedido)
 ]

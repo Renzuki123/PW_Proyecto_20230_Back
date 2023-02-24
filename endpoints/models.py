@@ -36,18 +36,20 @@ class Restaurante(models.Model):
         return self.title
 
 class Pedido(models.Model):
+    id = models.AutoField(primary_key=True)
     PEDIDO_ESTADOS = (
         ("S", "SOLICITADO"),
         ("EP", "EN PREPARACION"),
         ("EC", "EN CAMINO"),
         ("E", "ENTREGADO")
     )
-    nombre = models.CharField(max_length=50)
-    direccion = models.CharField(max_length=100)
-    detalles = models.CharField(max_length=100)
-    codigo = models.CharField(max_length=6)
-    metodo = models.CharField(max_length=15)
-    precio = models.DecimalField(default=0.0, decimal_places=2, max_digits=7) 
+    nombre = models.CharField(max_length=50, default="")
+    direccion = models.CharField(max_length=100, default="")
+    detalles = models.CharField(max_length=100, default="")
+    #codigo = models.CharField(max_length=6)
+    codigo = models.CharField(max_length=6, default ="ABC123")
+    metodo = models.CharField(max_length=15, default="")
+    total = models.DecimalField(default=0.0, decimal_places=2, max_digits=7) 
     
     #def __str__(self):
     #    return f"{self.nombre} - {self.direccion} - {self.codigo}"

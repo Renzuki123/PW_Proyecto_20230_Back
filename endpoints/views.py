@@ -2,14 +2,14 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.core import serializers
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 import json
 from django.http import JsonResponse
 import json
-from endpoints.models import User, Plato, Restaurante, Pedido
+from endpoints.models import User, Plato, Restaurante, Pedido, PedidoXPlato
 
 # Create your views here.
 # Si la peticion es GET: se puede enviar por: 1) Path parameter 2) Query Parameter. La desventaja está en que la data se envía mediante el url (inseguro)
@@ -104,36 +104,50 @@ def ObtenerPlatosGenericos(request):
         }
     strResponse = json.dumps(dictResponse)
     return HttpResponse(strResponse)
-    
 
-
+@require_POST
 @csrf_exempt
 def procesar_pedido(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         items = data['items']
+        nombre = data['nombre']
+        direccion = data['direccion']
+        detalles = data['detalles']
+        metodo = data['metodo']
         total = sum(float(item['precio'])*float(item['quantity']) for item in items)
-        return JsonResponse({'total': total})
+        # Creamos un objeto Pedido con los datos recibidos
+        pedido = Pedido(precio=total, nombre=nombre, direccion=direccion, detalles=detalles, metodo=metodo)
+        pedido.save()
+        for item in items:
+            plato = Plato.objects.get(nombre=item['name'])
+            pedido_x_plato = PedidoXPlato(pedido=pedido, plato=plato, cantidad=item['quantity'])
+            pedido_x_plato.save()
+        return JsonResponse({'success': True})
+
+    return JsonResponse({'error': 'Método no permitido'}, status=405)
 
 
 def obtener_total(carrito):
     total = sum(float(item['precio']) * float(item['quantity']) for item in carrito)
     return total
 
-
+@require_POST
 @csrf_exempt
-def registrarPedido(request):
-    if request.method == "POST":
-        # obtener los datos enviados en el cuerpo de la solicitud
-        data = request.POST
-        # hacer algo con los datos, por ejemplo, guardarlos en la base de datos
-        # ...
+def registrar_pedido(request):
+    if request.method == 'POST':
+        print(request.body)
+        data = json.loads(request.body)
+        nombre = data['nombre']
+        total = data['total'] 
+        direccion = data['direccion']
+        detalles = data['detalles']
+        metodo = data['metodo']
+        pedido = Pedido(nombre=nombre, total=total, direccion=direccion, detalles=detalles, metodo=metodo)
+        pedido.save()
+        return JsonResponse({'success': True})
 
-        # responder con un mensaje de éxito
-        return JsonResponse({"message": "Pedido registrado correctamente."})
-
-    # si no se hace una solicitud POST, responder con un error
-    return JsonResponse({"error": "Debe hacer una solicitud POST."}, status=400)
+    return JsonResponse({'error': 'Método no permitido'}, status=405)
 
 """
 @csrf_exempt
