@@ -101,7 +101,7 @@ DATABASES = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'restaurantesbd',
+        'NAME': 'restaurantesbd2',
         'USER': 'restaurantes',
         'PASSWORD': 'restaurantes',
         'HOST': '127.0.0.1',

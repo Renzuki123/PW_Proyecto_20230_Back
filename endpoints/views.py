@@ -112,13 +112,14 @@ def registrar_pedido(request):
         referencias = data['referencias']
         detalles = data['detalles']
         metodo = data['metodo']
-        pedido = Pedido(nombre=nombre, total=total, direccion=direccion, referencias = referencias, detalles=detalles, metodo=metodo)
+        pedido = Pedido(nombre=nombre, total=total, direccion=direccion, referencias=referencias, detalles=detalles, metodo=metodo, estado="S")
+        #pedido = Pedido(nombre=nombre, total=total, direccion=direccion, referencias=referencias, detalles=detalles, metodo=metodo)
         pedido.save()
 
         detalles = json.loads(detalles)
         
         for item in detalles:
-            plato = Plato.objects.get(id=item['id']) # Necesito ayuda para obtener el id del plato sabiendo su nombre
+            plato = Plato.objects.get(id=item['id']) 
             cantidad = int(item['cantidad'])
             pedido_x_plato = PedidoXPlato(pedido=pedido, plato=plato, cantidad=cantidad)
             pedido_x_plato.save()
@@ -126,6 +127,25 @@ def registrar_pedido(request):
         return JsonResponse({'success': True})
         
     return JsonResponse({'error': 'Método no permitido'}, status=405)
+
+@csrf_exempt
+def pedidos(request):
+    if request.method == 'GET':
+        pedidos = Pedido.objects.all()
+        pedidos_list = []
+        for pedido in pedidos:
+            pedido_dict = {
+                'id': pedido.id,
+                'nombre': pedido.nombre,
+                'detalles': pedido.detalles,
+                'direccion': pedido.direccion,
+                'metodo': pedido.metodo,
+                'codigo': pedido.codigo,
+                'total': pedido.total,
+                'estado': pedido.estado
+            }
+            pedidos_list.append(pedido_dict)
+        return JsonResponse({'pedidos': pedidos_list})
     
 """
 @csrf_exempt

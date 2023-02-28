@@ -51,10 +51,11 @@ class Pedido(models.Model):
     #codigo = models.CharField(max_length=6)
     codigo = models.CharField(max_length=6, default ="ABC123")
     metodo = models.CharField(max_length=15, default="")
-    total = models.DecimalField(default=0.0, decimal_places=2, max_digits=7) 
+    total = models.DecimalField(default=0.0, decimal_places=2, max_digits=7)
+    estado = models.CharField(max_length=2, choices=PEDIDO_ESTADOS, default="S")
     
-    #def __str__(self):
-    #    return f"{self.nombre} - {self.direccion} - {self.codigo}"
+    def __str__(self):
+        return f"{self.id} - 02"
 
 class PedidoXPlato(models.Model):
     id = models.AutoField(primary_key=True)
