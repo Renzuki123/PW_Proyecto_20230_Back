@@ -117,10 +117,12 @@ def registrar_pedido(request):
         pedido.save()
 
         detalles = json.loads(detalles)
+        detalles_pedido = []
         
         for item in detalles:
             plato = Plato.objects.get(id=item['id']) 
             cantidad = int(item['cantidad'])
+            detalles_pedido.append({'nombre': plato.nombre, 'cantidad': cantidad})
             pedido_x_plato = PedidoXPlato(pedido=pedido, plato=plato, cantidad=cantidad)
             pedido_x_plato.save()
         
