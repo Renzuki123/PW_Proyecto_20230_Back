@@ -236,25 +236,22 @@ def verEstado(request):
 
 @csrf_exempt
 def registrarentrega(request):
-    pedidos = [
-        {"code": 123, "desc": "Lomito saltado", "code_v": 123},
-        {"code": 777, "desc": "Chilcanito doble", "code_v": 444},
-        {"code": 789, "desc": "Tallarines rojos", "code_v": 333},
-    ]
-
     if request.method == "POST":
         dictCode = json.loads(request.body)
         code = dictCode["code"]
         error = "No se encontró ese pedido"
         if code != None:
-            for pedido in pedidos:
-                if int(code) == pedido["code"]:
-                    dictOK = {
-                        "error": "",
-                        "producto": pedido
-                    }
-                    strOK = json.dumps(dictOK)
-                    return HttpResponse(strOK)
+            try:
+                pedido = Pedido.objects.get(codigo=code)
+                producto = {"id": pedido.id, "nombre": pedido.nombre,"detalles": pedido.detalles, "direccion": pedido.direccion, "metodo": pedido.metodo,"codigo": pedido.codigo, "estado": pedido.estado, "total": str(pedido.total)}
+                dictOK = {
+                    "error": "",
+                    "producto": producto
+                }
+                strOK = json.dumps(dictOK)
+                return HttpResponse(strOK)
+            except Pedido.DoesNotExist:
+                pass
         else:
             error = "Por favor envíe un código de pedido"
         dictError = {
