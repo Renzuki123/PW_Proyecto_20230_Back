@@ -148,6 +148,48 @@ def pedidos(request):
             }
             pedidos_list.append(pedido_dict)
         return JsonResponse({'pedidos': pedidos_list})
+
+@require_POST
+@csrf_exempt
+def buscar_pedido_por_codigo(request):
+    if request.method == 'GET':
+        codigo_pedido = request.GET.get('codigo_pedido', '')
+        pedidos = Pedido.objects.filter(codigo=codigo_pedido)
+        pedidos_list = []
+        for pedido in pedidos:
+            pedido_dict = {
+                'id': pedido.id,
+                'nombre': pedido.nombre,
+                'detalles': pedido.detalles,
+                'direccion': pedido.direccion,
+                'metodo': pedido.metodo,
+                'codigo': pedido.codigo,
+                'total': pedido.total,
+                'estado': pedido.estado
+            }
+            pedidos_list.append(pedido_dict)
+        return JsonResponse({'pedidos': pedidos_list})
+
+@csrf_exempt
+@require_POST
+def cambiarEstado_Pedido(request):
+    if request.method == 'POST':
+        # Obtener el id y el nuevo estado del pedido desde la solicitud POST
+        data = json.loads(request.body)
+        pedido_id = data.get('id')
+        nuevo_estado = data.get('estado')
+        # Verificar si existe un pedido con el id proporcionado
+        if Pedido.objects.filter(id=pedido_id).exists():
+            # Actualizar el estado del pedido en la base de datos
+            pedido = Pedido.objects.get(id=pedido_id)
+            pedido.estado = nuevo_estado
+            pedido.save()
+
+            # Devolver una respuesta JSON con el nuevo estado del pedido actualizado
+            return JsonResponse({'id': pedido_id, 'estado': nuevo_estado})
+        else:
+            # Devolver una respuesta JSON con un mensaje de error si no se encontró el pedido
+            return JsonResponse({'error': f'Pedido con id {pedido_id} no encontrado'})
     
 """
 @csrf_exempt

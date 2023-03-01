@@ -15,4 +15,6 @@ urlpatterns = [
     path("platosgenericos", views.ObtenerPlatosGenericos),
     path("registrar_pedido", views.registrar_pedido),
     path('pedidos', views.pedidos),
+    path('buscar_pedido_por_codigo', views.buscar_pedido_por_codigo),
+    path('cambiarEstado', views.cambiarEstado_Pedido),
 ]
