@@ -493,27 +493,32 @@ def Verificar_EstadoPedido(request):
 @csrf_exempt
 def login(request):
     if request.method == "POST":
-        usuario = request.POST.get("usuario")
-        password = request.POST.get("password")
+        dictDataRequest = json.loads(request.body)
+        usuario = dictDataRequest["usuario"]
+        password = dictDataRequest["password"]
 
-        # Authenticate user
-        user = authenticate(request, username=usuario, password=password)
-
-        if user is not None:
-            # Log user in
-            login(request, user)
-            # Redirect to /req2
-            return redirect('/req2')
+        Cliente = User.objects.filter(usuario =usuario, password=password).first()
+        if Cliente:
+            dictOK = {
+                "error": "",
+                "Cliente": {
+                    "usuario": Cliente.usuario,
+                    "password": Cliente.password
+                }
+            }
+            return HttpResponse(json.dumps(dictOK))
         else:
             dictError = {
-                "error": "INICIO DE SESIÓN FALLIDO"
+                "error": "Credenciales incorrectas"
             }
-            return JsonResponse(dictError)
+            strError = json.dumps(usuario)
+            return HttpResponse(strError)
     else:
         dictError = {
-            "error": "SOLICITUD NO ES DE TIPO POST"
+            "error": "Tipo de petición no existe"
         }
-        return JsonResponse(dictError)
+        strError = json.dumps(dictError)
+        return HttpResponse(strError)
 
 @csrf_exempt
 def obtenerRestaurante(request):
