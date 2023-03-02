@@ -268,8 +268,7 @@ def ObtenerCategoria(request):
     if request.method == 'GET':
         categorias = Categoria.objects.raw(raw_query='SELECT "id"AS ID, category, dish FROM endpoints_categoria order by id;')
         categoria_list = [{'id': categoria.id, 'category': categoria.category, 'dish': categoria.dish} for categoria in categorias]
-        data = {'categorias' : categoria_list}
-        return JsonResponse(data, safe = False)
+        return JsonResponse(categoria_list, safe=False)
 
 @csrf_exempt        
 def LoginRest(request):
@@ -491,8 +490,6 @@ def Verificar_EstadoPedido(request):
 
 # Endpoints Renzo Cavero:
 # /endpoints/login
-
-
 @csrf_exempt
 def login(request):
     if request.method == "POST":
