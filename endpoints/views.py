@@ -518,49 +518,6 @@ def login(request):
         }
         return JsonResponse(dictError)
 
-
-def obtenerPlatos(request):
-    if request.method == "GET":
-        idCat = request.GET.get("Restaurante")
-
-        if idCat == None:
-            dictError = {
-                "error": "Enviar categoria."
-            }
-            strError = json.dumps(dictError)
-            return HttpResponse(strError)
-
-        platosFiltr = []
-
-        if idCat == "-1":
-            platosQS = Plato.objects.all()
-        else:
-            platosQS = Plato.objects.filter(categoria__pk=idCat)
-
-        for i in platosQS:
-            platosFiltr.append({
-                "id": i.pk,
-                "'title'": i.nombre,
-                "price": float(i.precio),
-                "img": i.img,
-                "desc": i.descripcion,
-                "'category'": i.categoria.nombre
-            })
-
-        dictResponse = {
-            "error": "",
-            "carta": platosFiltr
-        }
-        strResponse = json.dumps(dictResponse)
-        return HttpResponse(strResponse)
-    else:
-        dictError = {
-            "error": "NO EXISTE EL TIPO DE PETICION"
-        }
-        strError = json.dumps(dictError)
-        return HttpResponse(strError)
-
-
 @csrf_exempt
 def obtenerRestaurante(request):
     if request.method == "GET":
@@ -571,7 +528,7 @@ def obtenerRestaurante(request):
                 "id": r.pk,
                 "url": r.url,
                 "title": r.title,
-                "category": r.category,
+                "category": r.category.nombre,
                 "description": r.description,
                 "date": r.date,
             })
@@ -579,6 +536,34 @@ def obtenerRestaurante(request):
         dictOK = {
             "error": "",
             "data": listaRestaurantes
+        }
+        #strOK = json.dumps(dictOK["data"])
+        return HttpResponse(json.dumps(dictOK))
+
+    else:
+        dictError = {
+            "error": "NO EXISTE EL TIPO DE PETICION"
+        }
+        strError = json.dumps(dictError)
+        return HttpResponse(strError)
+
+@csrf_exempt
+def obtenerPlato(request):
+    if request.method == "GET":
+        listaPlatosQuerySet = Plato.objects.all()
+        listaPlatos = []
+        for r in listaPlatosQuerySet:
+            listaPlatos.append({
+                "id": r.pk,
+                "url": r.img,
+                "title": r.nombre,
+                "category": r.category.nombre,
+                "description": r.descripcion
+            })
+
+        dictOK = {
+            "error": "",
+            "data": listaPlatos
         }
         #strOK = json.dumps(dictOK["data"])
         return HttpResponse(json.dumps(dictOK))

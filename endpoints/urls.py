@@ -6,7 +6,7 @@ from . import views
 urlpatterns = [
     path("login", views.login), #Req1: Validación Login
     path("restaurante/listar", views.obtenerRestaurante), #Req3: Restaurantes Por Categoria
-    path("platos/listar", views.obtenerPlatos), #Req4: Platos Por Categoría
+    path("plato/listar", views.obtenerPlato), #Req4: Platos Por Categoría
 
     # Paths de Renzo Saucedo
     path("recomendaciones", views.ObtenerRecomendaciones),
