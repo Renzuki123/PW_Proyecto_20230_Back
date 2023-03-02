@@ -266,7 +266,7 @@ def registrarentrega(request):
 @csrf_exempt
 def ObtenerCategoria(request):
     if request.method == 'GET':
-        categorias = Categoria.objects.raw(raw_query='SELECT "id"AS ID, category, dish FROM public."Categoria" order by id;')
+        categorias = Categoria.objects.raw(raw_query='SELECT "id"AS ID, category, dish FROM endpoints_categoria order by id;')
         categoria_list = [{'id': categoria.id, 'category': categoria.category, 'dish': categoria.dish} for categoria in categorias]
         data = {'categorias' : categoria_list}
         return JsonResponse(data, safe = False)
@@ -302,6 +302,7 @@ def LoginRest(request):
         strError = json.dumps(dictError)
         return HttpResponse(strError)
 
+@csrf_exempt  
 def CategPedidos(request):
     if request.method != "GET":
         dictError = {
@@ -420,6 +421,7 @@ def CategPedidos(request):
         strResponse = json.dumps(dictResponse["pedido"])
         return HttpResponse(strResponse)
 
+@csrf_exempt  
 def Actualizar_Pedido(request):
    
     if request.method != "POST":
@@ -446,6 +448,8 @@ def Actualizar_Pedido(request):
         "error" : ""
     }
     return HttpResponse(json.dumps(dictOK))
+
+@csrf_exempt  
 def Verificar_EstadoPedido(request):
     if request.method != "GET":
         dictError = {

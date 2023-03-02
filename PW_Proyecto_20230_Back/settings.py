@@ -101,11 +101,11 @@ DATABASES = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'restaurantesbd2',
-        'USER': 'restaurantes',
-        'PASSWORD': 'restaurantes',
-        'HOST': '127.0.0.1',
-        'PORT': '8001'
+        'NAME': 'proyectopw',
+        'USER': 'Renzuki123',
+        'PASSWORD': 'Abc12345',
+        'HOST': 'proyectopw.postgres.database.azure.com',
+        'PORT': '5432'
     }
 }
 

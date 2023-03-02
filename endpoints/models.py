@@ -72,7 +72,7 @@ class Categoria(models.Model):
     dish = models.CharField(max_length=255 , default='')
 
     def __str__(self):
-        return self.id
+        return self.uuid
 
 class Platos(models.Model):
     nombre = models.CharField(max_length=50)
